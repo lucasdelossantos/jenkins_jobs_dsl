@@ -1,6 +1,0 @@
-apply plugin: 'groovy'
-
-dependencies {
-  implementation 'org.codehaus.groovy:groovy:2.5.15'
-  implementation 'org.jenkins-ci.plugins:job-dsl-core:1.77'
-}
