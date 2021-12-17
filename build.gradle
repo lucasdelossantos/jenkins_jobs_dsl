@@ -1,9 +1,26 @@
 apply plugin: 'groovy'
 
+//Added from https://github.com/patrikerdes/gradle-use-latest-versions-plugin for dependency updates
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        jcenter()
+    }
+    dependencies {
+        classpath "se.patrikerdes:gradle-use-latest-versions-plugin:0.2.18"
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
+    }
+}
+apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'se.patrikerdes.use-latest-versions'
+
 sourceSets {
     jobs {
         groovy {
-            srcDirs 'src/jobs'
+            srcDirs 'src/jobs/'
+            srcDirs 'src/jobs/logic'
             compileClasspath += main.compileClasspath
         }
         compileClasspath += sourceSets.main.output
@@ -33,6 +50,7 @@ configurations.all*.exclude group: 'xalan'
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.11'
+    // Added exclusion due to listed issue: https://issues.jenkins.io/browse/JENKINS-65341
     compile ("org.jenkins-ci.plugins:job-dsl-core:${jobDslVersion}"){
         exclude module: 'xstream'
     }
@@ -55,12 +73,7 @@ dependencies {
     testCompile 'org.jenkins-ci.plugins:structs:1.20@jar'
 
     // Plugins to install in test instance
-    //testPlugins 'org.jenkins-ci.plugins:cloudbees-folder:45.1'
-    testPlugins 'org.jenkins-ci.plugins:credentials:2.1.10'
-    testPlugins 'org.jenkins-ci.plugins:cvs:2.13'
-    testPlugins 'org.jenkins-ci.plugins:ghprb:1.40.0'
-    testPlugins 'org.jenkins-ci.plugins:token-macro:2.5'
-    testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps-global-lib:2.7'
+    testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps:2644.v29a793dac95a'
     testPlugins 'org.jenkins-ci.plugins.workflow:workflow-job:2.42'
 
     // Run the following script in the Script Console of your Jenkins instance to generate
