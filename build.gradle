@@ -20,7 +20,6 @@ sourceSets {
     jobs {
         groovy {
             srcDirs 'src/jobs/'
-            srcDirs 'src/jobs/logic'
             compileClasspath += main.compileClasspath
         }
         compileClasspath += sourceSets.main.output
