@@ -1,4 +1,4 @@
-pipelineJob('docker-test') {
+pipelineJob('Docker Test Job') {
     description('A simple demo for Jenkins DSL')
     definition {
         cps{
