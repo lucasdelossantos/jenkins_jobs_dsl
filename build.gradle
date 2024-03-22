@@ -20,7 +20,7 @@ apply plugin: 'se.patrikerdes.use-latest-versions'
 sourceSets {
     jobs {
         groovy {
-            srcDirs 'src/jobs/'
+            srcDirs 'src/jobs'
             compileClasspath += main.compileClasspath
         }
         compileClasspath += sourceSets.main.output
