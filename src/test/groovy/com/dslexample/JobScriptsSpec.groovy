@@ -15,7 +15,7 @@ import org.jvnet.hudson.test.JenkinsRule
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-jenkins = Jenkins.instance
+
 /**
  * Tests that all dsl scripts in the jobs directory will compile. All config.xml's are written to build/debug-xml.
  *
