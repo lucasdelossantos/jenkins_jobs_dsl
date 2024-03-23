@@ -37,6 +37,7 @@ class JobScriptsSpec extends Specification {
     @Unroll
     void 'test script #file.name'(File file) {
         given:
+        println "==============> ${jenkinsRule.instance}"
         JobManagement jm = new JenkinsJobManagement(System.out, [:], new File('.'))
 
         when:
@@ -54,7 +55,7 @@ class JobScriptsSpec extends Specification {
      * Write the config.xml for each generated job and view to the build dir.
      */
     private void writeItems(GeneratedItems items, File outputDir) {
-        Jenkins jenkins = Jenkins.instance
+        Jenkins jenkins = jenkinsRule.instance
         items.jobs.each { GeneratedJob generatedJob ->
             String jobName = generatedJob.jobName
             Item item = jenkins.getItemByFullName(jobName)
@@ -70,4 +71,3 @@ class JobScriptsSpec extends Specification {
         }
     }
 }
-
