@@ -9,13 +9,13 @@ import javaposse.jobdsl.dsl.GeneratedJob
 import javaposse.jobdsl.dsl.GeneratedView
 import javaposse.jobdsl.dsl.JobManagement
 import javaposse.jobdsl.plugin.JenkinsJobManagement
-import jenkins.model.Jenkins
+import jenkins.model.*
 import org.junit.ClassRule
 import org.jvnet.hudson.test.JenkinsRule
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-
+jenkins = Jenkins.instance
 /**
  * Tests that all dsl scripts in the jobs directory will compile. All config.xml's are written to build/debug-xml.
  *
@@ -39,7 +39,6 @@ class JobScriptsSpec extends Specification {
         given:
         println "==============> ${jenkinsRule.instance}"
         println "==============> ${jenkinsRule.jenkins}"
-        println "==============> ${jenkins.instance}"
         JobManagement jm = new JenkinsJobManagement(System.out, [:], new File('.'))
 
         when:
