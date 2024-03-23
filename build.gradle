@@ -6,7 +6,6 @@ buildscript {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
-        jcenter()
     }
     dependencies {
         classpath "se.patrikerdes:gradle-use-latest-versions-plugin:0.2.18"
@@ -30,8 +29,7 @@ sourceSets {
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.jenkins-ci.org/releases/' }
-    jcenter()
+    maven { url 'https://repo.jenkins-ci.org/public/' }
 }
 
 configurations {
@@ -49,15 +47,17 @@ configurations {
 configurations.all*.exclude group: 'xalan'
 
 dependencies {
+    implementation platform('org.apache.groovy:groovy-bom:4.0.20')    
     implementation 'org.apache.groovy:groovy:4.0.20'
     // Added exclusion due to listed issue: https://issues.jenkins.io/browse/JENKINS-65341
     implementation ("org.jenkins-ci.plugins:job-dsl-core:${jobDslVersion}"){
         exclude module: 'xstream'
     }
-    implementation 'org.kohsuke:github-api:1.321'
-
-    testImplementation 'org.spockframework:spock-core:2.4-M4-groovy-4.0'
+    implementation 'org.kohsuke:github-api:1.321' // GitHub API
+    testImplementation platform("org.spockframework:spock-bom:2.4-M4-groovy-4.0")
+    testImplementation 'org.spockframework:spock-core:2.4-M4-groovy-4.0' // Spock testing framework
     testImplementation 'cglib:cglib-nodep:3.3.0' // used by Spock
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2' // JUnit 5
 
     // Jenkins test harness dependencies
     testImplementation('org.jenkins-ci.main:jenkins-test-harness:2174.v111a_b_471784f') {
@@ -68,23 +68,23 @@ dependencies {
     }
 
     // Job DSL plugin including plugin dependencies
-    testImplementation "org.jenkins-ci.plugins:job-dsl:${jobDslVersion}"
-    testImplementation "org.jenkins-ci.plugins:job-dsl:${jobDslVersion}@jar"
-    testImplementation 'org.jenkins-ci.plugins:structs:337.v1b_04ea_4df7c8'
+    testImplementation "org.jenkins-ci.plugins:job-dsl:${jobDslVersion}" // Job DSL plugin
+    testImplementation "org.jenkins-ci.plugins:job-dsl:${jobDslVersion}@jar" // Job DSL plugin
+    testImplementation 'org.jenkins-ci.plugins:structs:337.v1b_04ea_4df7c8' // structs plugin
+    testImplementation 'org.jenkins-ci.plugins:script-security:1326.vdb_c154de8669' // script-security plugin
+
+
 
     // Plugins to install in test instance
-    testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps:3883.vb_3ff2a_e3eea_f'
-    testPlugins 'org.jenkins-ci.plugins.workflow:workflow-job:1400.v7fd111b_ec82f'
+    testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps:3883.vb_3ff2a_e3eea_f' // workflow-cps plugin
+    testPlugins 'org.jenkins-ci.plugins.workflow:workflow-job:1400.v7fd111b_ec82f' // workflow-job plugin
+    testPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.928.v7c780211d66e'
+    testPlugins 'org.jenkins-ci.plugins:credentials:1337.v60b_d7b_c7b_c9f'
+    testPlugins 'org.jenkins-ci.plugins:cvs:2.19.1'
+    testPlugins 'org.jenkins-ci.plugins:ghprb:1.42.2'
+    testPlugins 'org.jenkins-ci.plugins:token-macro:400.v35420b_922dcb_'
+    testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps-global-lib:612.v55f2f80781ef'
 
-    // Run the following script in the Script Console of your Jenkins instance to generate
-    // the above testPlugins list. (adapted from https://git.io/fjpUs)
-    /*
-        Jenkins.instance.pluginManager.plugins
-            .findAll { !(it.shortName in ['job-dsl', 'structs']) }
-            .collect { "testPlugins '${it.manifest.mainAttributes.getValue("Group-Id")}:${it.shortName}:${it.version}'" }
-            .sort()
-            .each { println it }
-     */
 }
 
 task resolveTestPlugins(type: Copy) {
@@ -108,6 +108,8 @@ task resolveTestPlugins(type: Copy) {
 }
 
 test {
-    dependsOn tasks.resolveTestPlugins
-    inputs.files sourceSets.jobs.groovy.srcDirs
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+}
 }
