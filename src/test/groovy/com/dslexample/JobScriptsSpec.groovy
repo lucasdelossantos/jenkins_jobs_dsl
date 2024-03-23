@@ -38,6 +38,8 @@ class JobScriptsSpec extends Specification {
     void 'test script #file.name'(File file) {
         given:
         println "==============> ${jenkinsRule.instance}"
+        println "==============> ${jenkinsRule.jenkins}"
+        println "==============> ${jenkins.instance}"
         JobManagement jm = new JenkinsJobManagement(System.out, [:], new File('.'))
 
         when:
