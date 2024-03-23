@@ -108,6 +108,8 @@ task resolveTestPlugins(type: Copy) {
 }
 
 test {
+    dependsOn tasks.resolveTestPlugins
+    inputs.files sourceSets.jobs.groovy.srcDirs
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
