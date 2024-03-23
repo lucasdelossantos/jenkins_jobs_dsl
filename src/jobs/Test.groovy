@@ -1,3 +1,5 @@
+import jenkins.model.*
+jenkins = Jenkins.instance
 pipelineJob('Jenkins Tutorial Demo - Simple DSL job') {
     description('A simple demo for Jenkins DSL')
     parameters {
